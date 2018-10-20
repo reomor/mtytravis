@@ -33,3 +33,18 @@ https://35.210.242.212.sslip.io - pritunl panel with valid certificate
 ## HW04
 testapp_IP=104.199.36.51
 testapp_port=9292
+```
+gcloud compute instances create reddit-app \
+  --boot-disk-size=10GB \
+  --image-family ubuntu-1604-lts \
+  --image-project=ubuntu-os-cloud \
+  --machine-type=g1-small \
+  --tags puma-server \
+  --restart-on-failure \
+  --metadata-from-file startup-script=startup_script.sh
+```
+gcloud command to create reddit firewall rule
+```
+gcloud compute firewall-rules create default-puma-server --allow tcp:9292 \
+--target-tags=puma-server --description="Reddit firewall rule added by gcloud compute firewall-rules"
+```
