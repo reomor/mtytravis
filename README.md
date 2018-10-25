@@ -31,8 +31,10 @@ Setting - Lets Encrypt Domain - 35.210.242.212.sslip.io
 https://35.210.242.212.sslip.io - pritunl panel with valid certificate
 
 ## HW04
+```
 testapp_IP=104.199.36.51
 testapp_port=9292
+```
 ```
 gcloud compute instances create reddit-app \
   --boot-disk-size=10GB \
