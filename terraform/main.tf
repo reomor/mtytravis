@@ -9,6 +9,10 @@ resource "google_compute_instance" "app" {
   machine_type = "g1-small"
   zone         = "europe-west1-b"
   
+  metadata {
+    ssh-keys = "reomor:${file("~/.ssh/reomor.pub")}"
+  }
+  
   boot_disk {
     initialize_params {
       image = "reddit-base"

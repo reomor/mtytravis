@@ -79,4 +79,7 @@ terraform init
 terraform plan
 terraform apply
 terrafrom show
+terraform refresh
+terraform output
+terraform output app_external_ip
 ```
