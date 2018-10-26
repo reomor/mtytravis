@@ -12,13 +12,29 @@ resource "google_compute_instance" "app" {
   tags = ["reddit-app"]
   
   metadata {
-    ssh-keys = "reomor:${file("~/.ssh/reomor.pub")}"
+    ssh-keys = "appuser:${file("~/.ssh/appuser.pub")}"
   }
   
   boot_disk {
     initialize_params {
       image = "reddit-base"
     }
+  }
+
+  connection {
+    type = "ssh"
+    user = "appuser"
+    agent = false
+    private_key = "${file("~/.ssh/appuser")}"
+  }
+
+  provisioner "file" {
+    source = "files/puma.service"
+    destination = "/tmp/puma.service"
+  }
+
+  provisioner "remote-exec" {
+    script = "files/deploy.sh"
   }
 
   network_interface {
