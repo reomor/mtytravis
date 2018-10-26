@@ -77,7 +77,7 @@ useful commands
 ```
 terraform init
 terraform plan
-terraform apply
+terraform apply -auto-approve=true
 terrafrom show
 terraform refresh
 terraform output
