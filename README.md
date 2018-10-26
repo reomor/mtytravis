@@ -86,6 +86,7 @@ terraform taint google_compute_instance.app
 terraform destroy
 terraform fmt
 ```
+#### Optional*
 add ssh key to project metadata
 ```
 resource "google_compute_project_metadata" "ssh_keys" {
@@ -109,3 +110,7 @@ after add new ssh key through GCP web-interface
 terraform apply
 ```
 deletes all existing ssh-key and inserts only keys in template main.tf
+#### Optional**
+the problem of such configuration is:
+ - each instance needs manual add in cluster
+ - each instance has external ip
