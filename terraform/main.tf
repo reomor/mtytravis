@@ -4,11 +4,14 @@ provider "google" {
   region  = "${var.region}"
 }
 
-resource "google_compute_project_metadata" "ssh_keys" {
-  project = "${var.project}"
-  metadata {
-    ssh-keys = "appuser1:${file(var.public_key_path)}\nappuser2:${file(var.public_key_path)}"
-  }
+resource "google_compute_project_metadata_item" "appuser1" {
+  key = "ssh-keys"
+  value = "appuser1:${file(var.public_key_path)}"
+}
+
+resource "google_compute_project_metadata_item" "appuser2" {
+  key = "ssh-keys"
+  value = "appuser2:${file(var.public_key_path)}"
 }
 
 resource "google_compute_instance" "app" {
