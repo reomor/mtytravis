@@ -83,4 +83,5 @@ terraform refresh
 terraform output
 terraform output app_external_ip
 terraform taint google_compute_instance.app
+terraform destroy
 ```
