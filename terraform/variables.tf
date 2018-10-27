@@ -23,3 +23,8 @@ variable private_key_path {
 variable disk_image {
   description = "Disk image"
 }
+
+variable count {
+  description = "Number of puma-servers"
+  default = 1
+}

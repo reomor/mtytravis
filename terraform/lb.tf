@@ -3,8 +3,7 @@ resource "google_compute_instance_group" "app-cluster" {
     description = "Terraform test instance group" 
 
     instances = [ 
-      "${google_compute_instance.app.self_link}",
-      "${google_compute_instance.app2.self_link}"
+      "${google_compute_instance.app.*.self_link}"
     ] 
 
     named_port { 
@@ -31,6 +30,7 @@ resource "google_compute_backend_service" "puma-backend" {
   protocol    = "HTTP"
   port_name = "puma"
   timeout_sec = 10
+  connection_draining_timeout_sec = 10
 
   backend {
     group = "${google_compute_instance_group.app-cluster.self_link}"

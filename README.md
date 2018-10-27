@@ -114,3 +114,4 @@ deletes all existing ssh-key and inserts only keys in template main.tf
 the problem of such configuration is:
  - each instance needs manual add in cluster
  - each instance has external ip
+ - lb starts delay too much
