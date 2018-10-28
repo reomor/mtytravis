@@ -115,3 +115,12 @@ the problem of such configuration is:
  - each instance needs manual add in cluster
  - each instance has external ip
  - lb starts delay too much
+
+## HW07
+### description
+...
+useful commands
+```
+terraform import google_compute_firewall.firewall_ssh default-allow-ssh
+```
+
