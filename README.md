@@ -96,6 +96,14 @@ resource "google_compute_project_metadata" "ssh_keys" {
   }
 }
 ```
+or
+```
+resource "google_compute_project_metadata_item" "appuser1" {
+  key = "ssh-keys"
+  value = "appuser1:${file(var.public_key_path)}"
+}
+
+```
 add ssh keys to project metadata
 ```
 resource "google_compute_project_metadata" "ssh_keys" {
@@ -119,6 +127,12 @@ the problem of such configuration is:
 ## HW07
 ### description
 ...
+if terraform controls yout firewall rules - do NOT forget to add default-ssh-allow after 
+```
+terraform destroy
+gcloud compute firewall-rules create default-allow-ssh --allow tcp:22
+```
+so that parker could get ssh access to VM
 useful commands
 ```
 terraform import google_compute_firewall.firewall_ssh default-allow-ssh
