@@ -136,5 +136,5 @@ so that parker could get ssh access to VM
 useful commands
 ```
 terraform import google_compute_firewall.firewall_ssh default-allow-ssh
+terraform get
 ```
-
