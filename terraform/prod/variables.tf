@@ -29,12 +29,3 @@ variable public_key_path {
 variable private_key_path {
   description = "Path to the private key used for ssh access"
 }
-
-variable disk_image {
-  description = "Disk image"
-}
-
-variable count {
-  description = "Number of puma-servers"
-  default     = 1
-}

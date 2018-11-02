@@ -143,6 +143,7 @@ list of all buckets
 ```
 gsutil ls
 ```
+---
 if stage and prod have common bucket:
 ``` #
 provider "google" {
