@@ -126,18 +126,62 @@ the problem of such configuration is:
 
 ## HW07
 ### description
-...
+using terraform modules and backend to store terraform state in GCP
+
 if terraform controls yout firewall rules - do NOT forget to add default-ssh-allow after 
 ```
 terraform destroy
 gcloud compute firewall-rules create default-allow-ssh --allow tcp:22
 ```
 so that parker could get ssh access to VM
-useful commands
+import rule to terraform state
 ```
 terraform import google_compute_firewall.firewall_ssh default-allow-ssh
 terraform get
 ```
+list of all buckets
 ```
 gsutil ls
 ```
+if stage and prod have common bucket:
+``` #
+provider "google" {
+  version = "1.4.0"
+  project = "${var.project}"
+  region  = "${var.region}"
+  zone    = "${var.zone}"
+}
+
+resource "google_storage_bucket" "state_bucket" {
+  name = "terraform-state-storage-bucket"
+
+  versioning {
+    enabled = true
+  }
+
+  force_destroy = true
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "google_storage_bucket_acl" "state_storage_bucket_acl" {
+  bucket         = "${google_storage_bucket.state_bucket.name}"
+  predefined_acl = "private"
+}
+```
+and the same backend without prefix
+```
+terraform {
+  backend "gcs" {
+    bucket = "terraform-state-storage-bucket"
+  }
+}
+```
+apply at the same time in stage and prod gives lock:
+```
+terraform apply
+Terraform acquires a state lock to protect the state from being written...
+```
+but both see the same state
