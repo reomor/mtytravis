@@ -274,3 +274,23 @@ ansible check ssh connection
 ```
 ansible appserver -i ./inventory -m ping
 ```
+add ansible.cfg
+```
+[defaults]
+inventory = ./inventory
+remote_user = appuser
+private_key_file = ~/.ssh/appuser
+host_key_checking = False
+retry_files_enabled = False
+```
+check access 
+```
+ansible dbserver -m command -a uptime
+```
+groups of hosts in inventory
+```
+[app]
+appserver ansible_host=35.241.231.203
+[db]
+dbserver ansible_host=35.195.244.14
+```
