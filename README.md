@@ -265,7 +265,7 @@ sudo apt-get install python-setuptools python-dev build-essential
 sudo easy_install pip
 sudo pip install -r requirments.txt
 ```
-inventory file for ansible
+inventory file for ansible ./inventory
 ```
 appserver ansible_host=35.241.231.203 ansible_user=appuser ansible_private_key_file=~/.ssh/appuser
 dbserver ansible_host=35.195.244.14 ansible_user=appuser ansible_private_key_file=~/.ssh/appuser
