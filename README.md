@@ -125,6 +125,9 @@ the problem of such configuration is:
  - lb starts delay too much
 
 ## HW07
+
+[![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-09/reomor_infra.svg?branch=terraform-2)](https://github.com/Otus-DevOps-2018-09/reomor_infra/tree/terraform-2)
+
 ### description
 using terraform modules and backend to store terraform state in GCP
 
@@ -144,8 +147,9 @@ list of all buckets
 gsutil ls
 ```
 ---
+Optional *
 if stage and prod have common bucket:
-``` #
+```
 provider "google" {
   version = "1.4.0"
   project = "${var.project}"
@@ -186,3 +190,65 @@ terraform apply
 Terraform acquires a state lock to protect the state from being written...
 ```
 but both see the same state
+---
+Optional **
+add provisioner to transfer db server ip address
+```
+connection {
+    type        = "ssh"
+    user        = "appuser"
+    agent       = false
+    private_key = "${file(var.private_key_path)}"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/files/puma.service"
+    destination = "/tmp/puma.service"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/files/deploy.sh"
+    destination = "/tmp/deploy.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/deploy.sh",
+      "/tmp/deploy.sh ${var.db_internal_ip}"
+    ]
+  }
+```
+difference from base deploy.sh is
+```
+...
+sudo mv /tmp/puma.service /etc/systemd/system/puma.service
+sudo sed -i "s/Environment=/Environment=DATABASE_URL=$DATABASE_URL/" /etc/systemd/system/puma.service
+sudo systemctl start puma
+...
+```
+add provisioner to allow mongod access not only from localhost
+```
+connection {
+    type        = "ssh"
+    user        = "appuser"
+    agent       = false
+    private_key = "${file(var.private_key_path)}"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/files/bind.sh"
+    destination = "/tmp/bind.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/bind.sh",
+      "/tmp/bind.sh"
+    ]
+  }
+```
+content of bind.sh is
+```
+sudo sed -i "s/bindIp: 127.0.0.1/bindIp: 0.0.0.0/" /etc/mongod.conf
+sudo service mongod restart
+```
