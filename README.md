@@ -252,3 +252,25 @@ content of bind.sh is
 sudo sed -i "s/bindIp: 127.0.0.1/bindIp: 0.0.0.0/" /etc/mongod.conf
 sudo service mongod restart
 ```
+
+## HW08
+
+[![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-09/reomor_infra.svg?branch=ansible-1)](https://github.com/Otus-DevOps-2018-09/reomor_infra/tree/ansible-1)
+
+### description
+...
+install pip
+```
+sudo apt-get install python-setuptools python-dev build-essential
+sudo easy_install pip
+sudo pip install -r requirments.txt
+```
+inventory file for ansible
+```
+appserver ansible_host=35.241.231.203 ansible_user=appuser ansible_private_key_file=~/.ssh/appuser
+dbserver ansible_host=35.195.244.14 ansible_user=appuser ansible_private_key_file=~/.ssh/appuser
+```
+ansible check ssh connection
+```
+ansible appserver -i ./inventory -m ping
+```
