@@ -330,3 +330,14 @@ using git module
 ```
 ansible app -m git -a 'repo=https://github.com/express42/reddit.git dest=/home/appuser/reddit'
 ```
+creating playbook
+```
+```
+after 'rm -rf ~/reddit' repository clone and status is changed
+```
+TASK [Clone repo] ***
+changed: [appserver]
+
+PLAY RECAP ***
+appserver                  : ok=2    changed=1    unreachable=0    failed=0
+```
