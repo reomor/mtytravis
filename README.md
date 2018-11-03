@@ -294,3 +294,24 @@ appserver ansible_host=35.241.231.203
 [db]
 dbserver ansible_host=35.195.244.14
 ```
+add inventory.yml
+```
+all:
+  children:  
+    app:
+      hosts:
+        appserver:
+          ansible_host: 35.241.231.203
+    db:
+      hosts:
+        dbserver:
+          ansible_host: 35.195.244.14
+```
+do command with all
+```
+ansible all -m ping -i inventory.yml
+```
+with one
+```
+ansible app -m ping -i inventory.yml
+```
