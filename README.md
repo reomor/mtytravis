@@ -258,7 +258,8 @@ sudo service mongod restart
 [![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-09/reomor_infra.svg?branch=ansible-1)](https://github.com/Otus-DevOps-2018-09/reomor_infra/tree/ansible-1)
 
 ### description
-...
+study ansible base concepts in practice
+
 install pip
 ```
 sudo apt-get install python-setuptools python-dev build-essential
