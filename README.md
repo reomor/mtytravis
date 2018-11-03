@@ -410,4 +410,5 @@ net:
 default inventory is file `inventory`
 ```
 ansible-playbook reddit_app.yml --check --limit db
+ansible-playbook reddit_app.yml --check --limit app --tags app-tag
 ```
