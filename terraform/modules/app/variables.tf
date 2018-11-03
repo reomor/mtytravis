@@ -19,3 +19,7 @@ variable public_key_path {
 variable "private_key_path" {
   description = "Path to the private key for ssh exec"
 }
+
+variable "db_internal_ip" {
+  description = "mongo database internal ip from module db"
+}

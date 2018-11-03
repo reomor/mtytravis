@@ -22,8 +22,16 @@ resource "google_compute_instance" "app" {
     destination = "/tmp/puma.service"
   }
 
+  provisioner "file" {
+    source      = "${path.module}/files/deploy.sh"
+    destination = "/tmp/deploy.sh"
+  }
+
   provisioner "remote-exec" {
-    script = "${path.module}/files/deploy.sh"
+    inline = [
+      "chmod +x /tmp/deploy.sh",
+      "/tmp/deploy.sh ${var.db_internal_ip}"
+    ]
   }
 
   network_interface {
