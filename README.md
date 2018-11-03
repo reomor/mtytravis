@@ -315,3 +315,18 @@ with one
 ```
 ansible app -m ping -i inventory.yml
 ```
+commands execution
+```
+ansible app -m command -a 'ruby -v' #without command shell
+ansible app -m shell -a 'ruby -v; bundler -v'
+```
+check service is running (three ways)
+```
+ansible db -m command -a 'systemctl status mongod'
+ansible db -m systemd -a name=mongod
+ansible db -m service -a name=mongod
+```
+using git module 
+```
+ansible app -m git -a 'repo=https://github.com/express42/reddit.git dest=/home/appuser/reddit'
+```
