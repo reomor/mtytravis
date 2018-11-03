@@ -364,3 +364,50 @@ ansible command for hosts in dynamic inventory
 ```bash
 ansible all -m ping -i ./dynamic_hosts.sh
 ```
+
+## HW09
+
+[![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-09/reomor_infra.svg?branch=ansible-2)](https://github.com/Otus-DevOps-2018-09/reomor_infra/tree/ansible-2)
+
+### description
+...
+playbook for mongo
+```
+---
+- name: Configure hosts and deploy application
+  hosts: all
+  tasks:
+    - name: Change mongo config file
+      become: true
+      template:
+        src: templates/mongod.conf.j2
+        dest: /etc/mongod.conf
+        mode: 0644
+      tags: db-tag
+
+```
+parametrized template
+```
+# Where and how to store data.
+storage:
+  dbPath: /var/lib/mongodb
+  journal:
+    enabled: true
+
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+
+# network interfaces
+net:
+  port: {{ mongo_port | default('27017') }}
+  bindIp: {{ mongo_bind_ip }}
+```
+--check - test 
+--limit db (group hosts limit)
+default inventory is file `inventory`
+```
+ansible-playbook reddit_app.yml --check --limit db
+```
