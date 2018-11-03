@@ -1,0 +1,4 @@
+project = "project-id"
+public_key_path = "~/.ssh/appuser.pub"
+private_key_path = "~/.ssh/appuser"
+db_internal_ip = "${module.db.db_internal_ip}"
