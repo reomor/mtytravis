@@ -1,0 +1,8 @@
+{
+    "all": {
+        "hosts": [],
+        "children": ["appserver", "dbserver"] 
+    },
+    "appserver": ["35.241.231.203"],
+    "dbserver": ["35.195.244.14"]
+}

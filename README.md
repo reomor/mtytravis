@@ -321,13 +321,13 @@ ansible app -m command -a 'ruby -v' #without command shell
 ansible app -m shell -a 'ruby -v; bundler -v'
 ```
 check service is running (three ways)
-```
+```bash
 ansible db -m command -a 'systemctl status mongod'
 ansible db -m systemd -a name=mongod
 ansible db -m service -a name=mongod
 ```
 using git module 
-```
+```bash
 ansible app -m git -a 'repo=https://github.com/express42/reddit.git dest=/home/appuser/reddit'
 ```
 creating playbook
@@ -340,4 +340,26 @@ changed: [appserver]
 
 PLAY RECAP ***
 appserver                  : ok=2    changed=1    unreachable=0    failed=0
+```
+dynamic hosts - inventory.json
+```json
+{
+    "all": {
+        "hosts": [],
+        "children": ["appserver", "dbserver"] 
+    },
+    "appserver": ["35.241.231.203"],
+    "dbserver": ["35.195.244.14"]
+}
+```
+get dynamic hosts - dynamic_hosts.sh
+```bash
+#!/bin/sh
+set -e
+
+cat ./inventory.json
+```
+ansible command for hosts in dynamic inventory
+```bash
+ansible all -m ping -i ./dynamic_hosts.sh
 ```
