@@ -477,3 +477,31 @@ ansible-playbook reddit_app2.yml --tags db-tag
 ansible-playbook reddit_app2.yml --tags app-tag --check
 ansible-playbook reddit_app2.yml --tags app-tag
 ```
+add deploy scenario
+```
+- name: App deploy
+  hosts: app
+  tags: deploy-tag
+  tasks:
+    - name: Fetch the latest version of application code
+      git:
+        repo: 'https://github.com/express42/reddit.git'
+        dest: /home/appuser/reddit
+        version: monolith
+      notify: restart puma
+
+    - name: Bundle install
+      bundler:
+        state: present
+        chdir: /home/appuser/reddit
+
+  handlers:  
+  - name: restart puma
+    become: true
+    systemd: name=puma state=restarted
+```
+command
+```
+ansible-playbook reddit_app2.yml --tags deploy-tag --check
+ansible-playbook reddit_app2.yml --tags deploy-tag
+```
