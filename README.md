@@ -412,3 +412,8 @@ default inventory is file `inventory`
 ansible-playbook reddit_app.yml --check --limit db
 ansible-playbook reddit_app.yml --check --limit app --tags app-tag
 ```
+deploy application
+```
+ansible-playbook reddit_app.yml --check --limit app --tags deploy-tag
+ansible-playbook reddit_app.yml --limit app --tags deploy-tag
+```
