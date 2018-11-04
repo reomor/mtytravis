@@ -417,3 +417,63 @@ deploy application
 ansible-playbook reddit_app.yml --check --limit app --tags deploy-tag
 ansible-playbook reddit_app.yml --limit app --tags deploy-tag
 ```
+one playbook - multiple scenarios
+```
+---
+- name: Mongo configuration
+  hosts: db
+  tags: db-tag
+  become: true
+  vars:
+    mongo_bind_ip: 0.0.0.0
+  tasks:
+    - name: Change mongo config file
+      template:
+        src: templates/mongod.conf.j2
+        dest: /etc/mongod.conf
+        mode: 0644
+      notify: restart mongod
+
+  handlers:
+  - name: restart mongod
+    service: name=mongod state=restarted
+
+- name: App configuration
+  hosts: app
+  tags: app-tag
+  become: true
+  vars:
+    mongo_bind_ip: 0.0.0.0
+    db_host: 10.132.0.2
+  tasks:
+    - name: Add unit file for Puma
+      become: true
+      copy:
+        src: files/puma.service
+        dest: /etc/systemd/system/puma.service
+      tags: app-tag
+      notify: restart puma
+
+    - name: Add config for DB connection
+      template:
+        src: templates/db_config.j2
+        dest: /home/appuser/db_config
+        owner: appuser
+        group: appuser
+
+    - name: Enable puma
+      become: true
+      systemd: name=puma enabled=yes
+
+  handlers:  
+  - name: restart puma
+    become: true
+    systemd: name=puma state=restarted
+```
+commands
+```
+ansible-playbook reddit_app2.yml --tags db-tag --check
+ansible-playbook reddit_app2.yml --tags db-tag
+ansible-playbook reddit_app2.yml --tags app-tag --check
+ansible-playbook reddit_app2.yml --tags app-tag
+```
