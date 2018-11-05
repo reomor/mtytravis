@@ -505,3 +505,15 @@ command
 ansible-playbook reddit_app2.yml --tags deploy-tag --check
 ansible-playbook reddit_app2.yml --tags deploy-tag
 ```
+multiple scenarios in multiple files
+```
+---
+- import_playbook: app.yml
+- import_playbook: db.yml
+- import_playbook: deploy.yml
+```
+command
+```
+ansible-playbook site.yml --check
+ansible-playbook site.yml
+```
