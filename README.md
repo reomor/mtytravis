@@ -543,3 +543,7 @@ there are gce_tags like ["reddit-db"]
 ```
 ansible -i ./dynamic-inventory/ reddit-db -m ping
 ```
+build packer image from root
+```
+packer build -var-file packer/variables.json packer/app.json
+```
