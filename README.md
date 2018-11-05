@@ -371,6 +371,9 @@ ansible all -m ping -i ./dynamic_hosts.sh
 
 ### description
 ...
+```
+pip install apache-libcloud
+```
 playbook for mongo
 ```
 ---
@@ -516,4 +519,27 @@ command
 ```
 ansible-playbook site.yml --check
 ansible-playbook site.yml
+```
+GCE (gce.py and gce.ini)
+download from and put in dynamic-inventory dir
+```
+https://github.com/ansible/ansible/tree/devel/contrib/inventory
+```
+install pycrypto
+```
+pip install pycrypto
+```
+Set the following environment variables before running Ansible in order to configure your credentials:
+```
+GCE_EMAIL
+GCE_PROJECT
+GCE_CREDENTIALS_FILE_PATH
+```
+try (chmod +x before) to get list of all instances
+```
+./gce.py --list
+```
+there are gce_tags like ["reddit-db"]
+```
+ansible -i ./dynamic-inventory/ reddit-db -m ping
 ```
