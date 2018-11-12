@@ -1,35 +1,35 @@
-resource "google_compute_instance_group" "app-cluster" { 
-    name  = "app-cluster" 
-    description = "Terraform test instance group" 
+resource "google_compute_instance_group" "app-cluster" {
+  name        = "app-cluster"
+  description = "Terraform test instance group"
 
-    instances = [ 
-      "${google_compute_instance.app.*.self_link}"
-    ] 
+  instances = [
+    "${google_compute_instance.app.*.self_link}",
+  ]
 
-    named_port { 
-      name = "puma" 
-      port = "9292" 
-    } 
+  named_port {
+    name = "puma"
+    port = "9292"
+  }
 
-    zone = "${var.zone}"
+  zone = "${var.zone}"
 }
 
-resource "google_compute_health_check" "puma-health-check" { 
-    name    = "puma-health-check" 
-    check_interval_sec = 5 
-    timeout_sec  = 5 
+resource "google_compute_health_check" "puma-health-check" {
+  name               = "puma-health-check"
+  check_interval_sec = 5
+  timeout_sec        = 5
 
-    tcp_health_check { 
-      port = "9292" 
-    } 
+  tcp_health_check {
+    port = "9292"
+  }
 }
 
 resource "google_compute_backend_service" "puma-backend" {
-  name        = "puma-backend"
-  description = "Our company website"
-  protocol    = "HTTP"
-  port_name = "puma"
-  timeout_sec = 10
+  name                            = "puma-backend"
+  description                     = "Our company website"
+  protocol                        = "HTTP"
+  port_name                       = "puma"
+  timeout_sec                     = 10
   connection_draining_timeout_sec = 10
 
   backend {
