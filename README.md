@@ -252,3 +252,115 @@ content of bind.sh is
 sudo sed -i "s/bindIp: 127.0.0.1/bindIp: 0.0.0.0/" /etc/mongod.conf
 sudo service mongod restart
 ```
+
+## HW08
+
+[![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-09/reomor_infra.svg?branch=ansible-1)](https://github.com/Otus-DevOps-2018-09/reomor_infra/tree/ansible-1)
+
+### description
+study ansible base concepts in practice
+
+install pip
+```
+sudo apt-get install python-setuptools python-dev build-essential
+sudo easy_install pip
+sudo pip install -r requirments.txt
+```
+inventory file for ansible ./inventory
+```
+appserver ansible_host=35.241.231.203 ansible_user=appuser ansible_private_key_file=~/.ssh/appuser
+dbserver ansible_host=35.195.244.14 ansible_user=appuser ansible_private_key_file=~/.ssh/appuser
+```
+ansible check ssh connection
+```
+ansible appserver -i ./inventory -m ping
+```
+add ansible.cfg
+```
+[defaults]
+inventory = ./inventory
+remote_user = appuser
+private_key_file = ~/.ssh/appuser
+host_key_checking = False
+retry_files_enabled = False
+```
+check access 
+```
+ansible dbserver -m command -a uptime
+```
+groups of hosts in inventory
+```
+[app]
+appserver ansible_host=35.241.231.203
+[db]
+dbserver ansible_host=35.195.244.14
+```
+add inventory.yml
+```
+all:
+  children:  
+    app:
+      hosts:
+        appserver:
+          ansible_host: 35.241.231.203
+    db:
+      hosts:
+        dbserver:
+          ansible_host: 35.195.244.14
+```
+do command with all
+```
+ansible all -m ping -i inventory.yml
+```
+with one
+```
+ansible app -m ping -i inventory.yml
+```
+commands execution
+```
+ansible app -m command -a 'ruby -v' #without command shell
+ansible app -m shell -a 'ruby -v; bundler -v'
+```
+check service is running (three ways)
+```bash
+ansible db -m command -a 'systemctl status mongod'
+ansible db -m systemd -a name=mongod
+ansible db -m service -a name=mongod
+```
+using git module 
+```bash
+ansible app -m git -a 'repo=https://github.com/express42/reddit.git dest=/home/appuser/reddit'
+```
+creating playbook
+```
+```
+after 'rm -rf ~/reddit' repository clone and status is changed
+```
+TASK [Clone repo] ***
+changed: [appserver]
+
+PLAY RECAP ***
+appserver                  : ok=2    changed=1    unreachable=0    failed=0
+```
+dynamic hosts - inventory.json
+```json
+{
+    "all": {
+        "hosts": [],
+        "children": ["appserver", "dbserver"] 
+    },
+    "appserver": ["35.241.231.203"],
+    "dbserver": ["35.195.244.14"]
+}
+```
+get dynamic hosts - dynamic_hosts.sh
+```bash
+#!/bin/sh
+set -e
+
+cat ./inventory.json
+```
+ansible command for hosts in dynamic inventory
+```bash
+ansible all -m ping -i ./dynamic_hosts.sh
+```
