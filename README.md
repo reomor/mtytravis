@@ -364,3 +364,186 @@ ansible command for hosts in dynamic inventory
 ```bash
 ansible all -m ping -i ./dynamic_hosts.sh
 ```
+
+## HW09
+
+[![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-09/reomor_infra.svg?branch=ansible-2)](https://github.com/Otus-DevOps-2018-09/reomor_infra/tree/ansible-2)
+
+### description
+...
+```
+pip install apache-libcloud
+```
+playbook for mongo
+```
+---
+- name: Configure hosts and deploy application
+  hosts: all
+  tasks:
+    - name: Change mongo config file
+      become: true
+      template:
+        src: templates/mongod.conf.j2
+        dest: /etc/mongod.conf
+        mode: 0644
+      tags: db-tag
+
+```
+parametrized template
+```
+# Where and how to store data.
+storage:
+  dbPath: /var/lib/mongodb
+  journal:
+    enabled: true
+
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+
+# network interfaces
+net:
+  port: {{ mongo_port | default('27017') }}
+  bindIp: {{ mongo_bind_ip }}
+```
+--check - test 
+--limit db (group hosts limit)
+default inventory is file `inventory`
+```
+ansible-playbook reddit_app.yml --check --limit db
+ansible-playbook reddit_app.yml --check --limit app --tags app-tag
+```
+deploy application
+```
+ansible-playbook reddit_app.yml --check --limit app --tags deploy-tag
+ansible-playbook reddit_app.yml --limit app --tags deploy-tag
+```
+one playbook - multiple scenarios
+```
+---
+- name: Mongo configuration
+  hosts: db
+  tags: db-tag
+  become: true
+  vars:
+    mongo_bind_ip: 0.0.0.0
+  tasks:
+    - name: Change mongo config file
+      template:
+        src: templates/mongod.conf.j2
+        dest: /etc/mongod.conf
+        mode: 0644
+      notify: restart mongod
+
+  handlers:
+  - name: restart mongod
+    service: name=mongod state=restarted
+
+- name: App configuration
+  hosts: app
+  tags: app-tag
+  become: true
+  vars:
+    mongo_bind_ip: 0.0.0.0
+    db_host: 10.132.0.2
+  tasks:
+    - name: Add unit file for Puma
+      become: true
+      copy:
+        src: files/puma.service
+        dest: /etc/systemd/system/puma.service
+      tags: app-tag
+      notify: restart puma
+
+    - name: Add config for DB connection
+      template:
+        src: templates/db_config.j2
+        dest: /home/appuser/db_config
+        owner: appuser
+        group: appuser
+
+    - name: Enable puma
+      become: true
+      systemd: name=puma enabled=yes
+
+  handlers:  
+  - name: restart puma
+    become: true
+    systemd: name=puma state=restarted
+```
+commands
+```
+ansible-playbook reddit_app2.yml --tags db-tag --check
+ansible-playbook reddit_app2.yml --tags db-tag
+ansible-playbook reddit_app2.yml --tags app-tag --check
+ansible-playbook reddit_app2.yml --tags app-tag
+```
+add deploy scenario
+```
+- name: App deploy
+  hosts: app
+  tags: deploy-tag
+  tasks:
+    - name: Fetch the latest version of application code
+      git:
+        repo: 'https://github.com/express42/reddit.git'
+        dest: /home/appuser/reddit
+        version: monolith
+      notify: restart puma
+
+    - name: Bundle install
+      bundler:
+        state: present
+        chdir: /home/appuser/reddit
+
+  handlers:  
+  - name: restart puma
+    become: true
+    systemd: name=puma state=restarted
+```
+command
+```
+ansible-playbook reddit_app2.yml --tags deploy-tag --check
+ansible-playbook reddit_app2.yml --tags deploy-tag
+```
+multiple scenarios in multiple files
+```
+---
+- import_playbook: app.yml
+- import_playbook: db.yml
+- import_playbook: deploy.yml
+```
+command
+```
+ansible-playbook site.yml --check
+ansible-playbook site.yml
+```
+GCE (gce.py and gce.ini)
+download from and put in dynamic-inventory dir
+```
+https://github.com/ansible/ansible/tree/devel/contrib/inventory
+```
+install pycrypto
+```
+pip install pycrypto
+```
+Set the following environment variables before running Ansible in order to configure your credentials:
+```
+GCE_EMAIL
+GCE_PROJECT
+GCE_CREDENTIALS_FILE_PATH
+```
+try (chmod +x before) to get list of all instances
+```
+./gce.py --list
+```
+there are gce_tags like ["reddit-db"]
+```
+ansible -i ./dynamic-inventory/ reddit-db -m ping
+```
+build packer image from root
+```
+packer build -var-file packer/variables.json packer/app.json
+```
