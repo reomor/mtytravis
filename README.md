@@ -370,7 +370,7 @@ ansible all -m ping -i ./dynamic_hosts.sh
 [![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-09/reomor_infra.svg?branch=ansible-2)](https://github.com/Otus-DevOps-2018-09/reomor_infra/tree/ansible-2)
 
 ### description
-...
+
 ```
 pip install apache-libcloud
 ```
@@ -546,4 +546,15 @@ ansible -i ./dynamic-inventory/ reddit-db -m ping
 build packer image from root
 ```
 packer build -var-file packer/variables.json packer/app.json
+```
+
+## HW10
+
+[![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-09/reomor_infra.svg?branch=ansible-3)](https://github.com/Otus-DevOps-2018-09/reomor_infra/tree/ansible-3)
+
+### description
+
+create ansible role structure
+```
+ansible-galaxy init role-name
 ```
