@@ -558,3 +558,9 @@ create ansible role structure
 ```
 ansible-galaxy init role-name
 ```
+run ansible with roles with dynamic inventory
+```
+. export_vars.gpe.sh
+ansible-playbook site.yml -i ./dynamic-inventory/ --check
+ansible-playbook site.yml -i ./dynamic-inventory
+```
