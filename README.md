@@ -564,3 +564,4 @@ run ansible with roles with dynamic inventory
 ansible-playbook site.yml -i ./dynamic-inventory/ --check
 ansible-playbook site.yml -i ./dynamic-inventory
 ```
+group_vars directory in playbook-dir or inventory-file allows creating files with vars for groups
