@@ -577,3 +577,10 @@ install nginx
 ```
 ansible-galaxy install -r environments/stage/requirements.yml
 ```
+add vault_password_file in ansible.cfg and encrypt
+```
+vault_password_key = ~/.ansible/vault.key
+ansible-vault encrypt environments/prod/credentials.yml
+ansible-vault edit environments/prod/credentials.yml
+ansible-vault decrypt environments/prod/credentials.yml
+```
