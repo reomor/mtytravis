@@ -573,3 +573,7 @@ ansible-playbook playbooks/site.yml
 ```
 ansible-playbook -i environments/prod/inventory playbooks/site.yml --check
 ```
+install nginx
+```
+ansible-galaxy install -r environments/stage/requirements.yml
+```
