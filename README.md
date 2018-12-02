@@ -590,3 +590,8 @@ add dynamic inventory to environment
 ansible-playbook -i environments/stage/dynamic-inventory.sh playbooks/site.yml --check
 ansible-playbook -i environments/stage/dynamic-inventory.sh playbooks/site.yml
 ```
+in order to use dynamic inventory with GCP you have to name files in group_var like tag_host-name
+i've just done sed from that to host-name
+```
+./dynamic-inventory/gce.py --list | sed 's/tag_reddit-db/db/g; s/tag_reddit-app/app/g; s/reddit-db/db/g; s/reddit-app/app/g'
+```
