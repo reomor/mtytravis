@@ -565,3 +565,7 @@ ansible-playbook site.yml -i ./dynamic-inventory/ --check
 ansible-playbook site.yml -i ./dynamic-inventory
 ```
 group_vars directory in playbook-dir or inventory-file allows creating files with vars for groups
+```
+ansible-playbook playbooks/site.yml --check
+ansible-playbook playbooks/site.yml
+```
