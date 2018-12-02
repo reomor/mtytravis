@@ -584,3 +584,9 @@ ansible-vault encrypt environments/prod/credentials.yml
 ansible-vault edit environments/prod/credentials.yml
 ansible-vault decrypt environments/prod/credentials.yml
 ```
+add dynamic inventory to environment
+```
+. export_vars_gpe.sh
+ansible-playbook -i environments/stage/dynamic-inventory.sh playbooks/site.yml --check
+ansible-playbook -i environments/stage/dynamic-inventory.sh playbooks/site.yml
+```
