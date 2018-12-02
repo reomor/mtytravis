@@ -1,6 +1,6 @@
 ---
 - name: Mongo configuration
-  hosts: reddit-db
+  hosts: db
   become: true
   vars:
     mongo_bind_ip: 0.0.0.0
